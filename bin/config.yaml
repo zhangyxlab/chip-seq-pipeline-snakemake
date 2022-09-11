@@ -1,0 +1,11 @@
+##################################################
+##  configuration file.                     ##
+## Use this file to customize your  analysis ##
+##################################################
+
+BWA_INDEX_PATH: "/storage/zhangyanxiaoLab/share/bwa_index/"
+#SE_SUFFIX: ".fastq"
+#R1_SUFFIX: "_R1.fastq"
+#R2_SUFFIX: "_R2.fastq.bz2"
+#BOWTIE2_INDEX_PATH: "/storage/zhangyanxiaoLab/share/bowtie2_index/"
+
