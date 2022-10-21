@@ -40,8 +40,8 @@ DIR=$(dirname $0)
 LOG=run-$(date +%Y-%m-%d-%H-%M-%S).log
 . ${DIR}/validate_programs.sh
 
-if [ $SERVER == "silencer.sdsc.edu" ]; then
-  source /projects/ps-renlab/share/Pipelines/environments/python3env/bin/activate
+if [ $SERVER == "heterochromatin.localdomain" ]; then
+  source /storage/zhangyanxiaoLab/share/Pipelines/environments/python3env/bin/activate
   ### unlock the directory
   touch Snakefile
   snakemake --unlock
