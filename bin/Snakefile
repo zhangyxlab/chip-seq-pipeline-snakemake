@@ -30,7 +30,7 @@ rule vanilla:
     input: 
         expand("bigWig/{sample}.nodup.bw", sample=SAMPLES),
         expand("bam/{sample}.filt.nodup.srt.bam", sample=SAMPLES),
-        expand("qc/{sample}.filt.nodup.sample."+str(int(NREADS)/1000000)+".SE.tagAlign.gz.cc.qc",sample=SAMPLES),
+#        expand("qc/{sample}.filt.nodup.sample."+str(int(NREADS)/1000000)+".SE.tagAlign.gz.cc.qc",sample=SAMPLES),
         "all_sample.qc.txt"
 
 rule bwa_map:
@@ -91,26 +91,26 @@ rule bam_finalize:
         "{{m0=m0+1}}{{mt=mt+$1}} END{{printf\"%d\\t%d\\t%d\\t%d\\t%f\\t%f\\t%f\\n\","
         "mt,m0,m1,m2,m0/mt,m1/m0,m1/m2}}' > {output.pbc}"
 
-rule phantom:
-    input:
-        bam = "bam/{sample}.filt.nodup.srt.bam"
-    output: 
-        tag_align = temp("{sample}.filt.nodup.srt.SE.tagAlign.gz"),
-        subsample = temp("{sample}.filt.nodup.sample."+str(int(NREADS)/1000000)+".SE.tagAlign.gz"),
-        plot = "qc/{sample}.filt.nodup.sample."+str(int(NREADS)/1000000)+".SE.tagAlign.gz.cc.plot.pdf",
-        cc = "qc/{sample}.filt.nodup.sample."+str(int(NREADS)/1000000)+".SE.tagAlign.gz.cc.qc",
-        cc_temp = temp("qc/{sample}.cc.temp")
-    log: 
-        "logs/phantompeak/{sample}.phantom.log"
-    threads: 1
-    shell: 
-        "bedtools bamtobed -i {input.bam} | awk 'BEGIN{{OFS=\"\\t\"}}{{$4=\"N\";$5=\"1000\";print $0}}' | gzip -c > {output.tag_align};"
-        "zcat {output.tag_align} | grep -v \"chrM\" | shuf -n {NREADS} |"
-        "gzip -c > {output.subsample};"
-        "Rscript {PHANTOMPEAKTOOL} -c={output.subsample} -filtchr=chrM "
-        "-savp={output.plot} -out={output.cc} -tmpdir=tmp/{wildcards.sample} -rf &> {log};"
-        "sed -r 's/,[^\\t]+//g' {output.cc} > {output.cc_temp};"
-        "cp {output.cc_temp} {output.cc}"
+#rule phantom:
+#    input:
+#        bam = "bam/{sample}.filt.nodup.srt.bam"
+#    output: 
+#        tag_align = temp("{sample}.filt.nodup.srt.SE.tagAlign.gz"),
+#        subsample = temp("{sample}.filt.nodup.sample."+str(int(NREADS)/1000000)+".SE.tagAlign.gz"),
+#        plot = "qc/{sample}.filt.nodup.sample."+str(int(NREADS)/1000000)+".SE.tagAlign.gz.cc.plot.pdf",
+#        cc = "qc/{sample}.filt.nodup.sample."+str(int(NREADS)/1000000)+".SE.tagAlign.gz.cc.qc",
+#        cc_temp = temp("qc/{sample}.cc.temp")
+#    log: 
+#        "logs/phantompeak/{sample}.phantom.log"
+#    threads: 1
+#    shell: 
+#        "bedtools bamtobed -i {input.bam} | awk 'BEGIN{{OFS=\"\\t\"}}{{$4=\"N\";$5=\"1000\";print $0}}' | gzip -c > {output.tag_align};"
+#        "zcat {output.tag_align} | grep -v \"chrM\" | shuf -n {NREADS} |"
+#        "gzip -c > {output.subsample};"
+#        "Rscript {PHANTOMPEAKTOOL} -c={output.subsample} -filtchr=chrM "
+#        "-savp={output.plot} -out={output.cc} -tmpdir=tmp/{wildcards.sample} -rf &> {log};"
+#        "sed -r 's/,[^\\t]+//g' {output.cc} > {output.cc_temp};"
+#        "cp {output.cc_temp} {output.cc}"
 
 rule bam2bw:
     input: 
